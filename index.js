@@ -9,10 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://git-branch-viewer-frontend.vercel.app",
-    ],
+    origin: ["http://localhost:5173", "https://git-branch-viewer.vercel.app"],
     credentials: true,
   })
 );
