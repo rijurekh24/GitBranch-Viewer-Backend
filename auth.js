@@ -10,7 +10,10 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/auth/github/callback",
+      callbackURL:
+        process.env.NODE_ENV === "production"
+          ? "https://gitbranch-viewer-backend.onrender.com/auth/github/callback"
+          : "http://localhost:5000/auth/github/callback",
       scope: ["repo"],
     },
     (accessToken, refreshToken, profile, done) => {
@@ -32,10 +35,17 @@ router.get("/github", passport.authenticate("github", { scope: ["repo"] }));
 router.get(
   "/github/callback",
   passport.authenticate("github", {
-    failureRedirect: "http://localhost:5173",
+    failureRedirect:
+      process.env.NODE_ENV === "production"
+        ? "https://git-branch-viewer.vercel.app"
+        : "http://localhost:5173",
   }),
   (req, res) => {
-    res.redirect("http://localhost:5173/dashboard");
+    res.redirect(
+      process.env.NODE_ENV === "production"
+        ? "https://git-branch-viewer.vercel.app/dashboard"
+        : "http://localhost:5173/dashboard"
+    );
   }
 );
 
